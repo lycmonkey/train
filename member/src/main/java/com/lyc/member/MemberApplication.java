@@ -18,6 +18,7 @@ public class MemberApplication {
         final ConfigurableEnvironment environment = application.run(args).getEnvironment();
         LOG.info("启动成功！！");
         LOG.info("地址\thttp://127.0.0.1:{}", environment.getProperty("server.port"));
-        LOG.info("测试地址\thttp://127.0.0.1:{}/member/hello", environment.getProperty("server.port"));
+        LOG.info("测试地址\thttp://127.0.0.1:{}{}/hello", environment.getProperty("server.port"),
+                environment.getProperty("server.servlet.context-path"));
     }
 }
