@@ -1,5 +1,7 @@
 package com.lyc.member.Controller;
 
+import com.lyc.common.resp.CommonResp;
+import com.lyc.member.req.MemberRegisterReq;
 import com.lyc.member.service.MemberService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,8 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public long register(String mobile) {
-        return memberService.register(mobile);
+    public CommonResp<Long> register(MemberRegisterReq memberRegisterReq) {
+        return memberService.register(memberRegisterReq);
     }
 
 
@@ -28,7 +30,7 @@ public class MemberController {
 
 
     @GetMapping("/count")
-    public int count() {
+    public CommonResp<Integer> count() {
         return memberService.count();
     }
 

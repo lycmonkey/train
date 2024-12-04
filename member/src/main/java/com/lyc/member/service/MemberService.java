@@ -1,16 +1,19 @@
 package com.lyc.member.service;
 
 
+import com.lyc.common.resp.CommonResp;
+import com.lyc.member.req.MemberRegisterReq;
+
 /**
  * @author lyc
  */
 public interface MemberService {
 
 
-    long register(String mobile);
+    CommonResp<Long> register(MemberRegisterReq memberRegisterReq);
 
 
 
-    int count();
+    CommonResp<Integer> count();
 
 }

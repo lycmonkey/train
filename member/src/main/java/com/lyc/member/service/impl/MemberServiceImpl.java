@@ -1,9 +1,11 @@
 package com.lyc.member.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.lyc.common.resp.CommonResp;
 import com.lyc.member.domain.Member;
 import com.lyc.member.domain.MemberExample;
 import com.lyc.member.mapper.MemberMapper;
+import com.lyc.member.req.MemberRegisterReq;
 import com.lyc.member.service.MemberService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -19,12 +21,13 @@ public class MemberServiceImpl implements MemberService {
     @Resource
     private MemberMapper memberMapper;
 
-    public long register(String mobile) {
+    public CommonResp<Long> register(MemberRegisterReq memberRegisterReq) {
+        String mobile = memberRegisterReq.getMobile();
         MemberExample memberExample = new MemberExample();
         memberExample.createCriteria().andMobileEqualTo(mobile);
         final List<Member> list = memberMapper.selectByExample(memberExample);
         if (CollectionUtil.isNotEmpty(list)) {
-            return list.get(0).getId();
+            return new CommonResp<>(list.get(0).getId());
         }
 
         Member member = new Member();
@@ -33,16 +36,16 @@ public class MemberServiceImpl implements MemberService {
 
         int count = memberMapper.insert(member);
         if (count != 1) {
-            return 0;
+            return new CommonResp<Long>(false, "注册失败");
         }
-        return member.getId();
+        return new CommonResp<>(member.getId());
     }
 
 
 
 
     @Override
-    public int count() {
-        return Math.toIntExact(memberMapper.countByExample(null));
+    public CommonResp<Integer> count() {
+        return new CommonResp<>(Math.toIntExact(memberMapper.countByExample(null)));
     }
 }
