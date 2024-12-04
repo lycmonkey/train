@@ -6,6 +6,11 @@ package com.lyc.member.service;
  */
 public interface MemberService {
 
+
+    long register(String mobile);
+
+
+
     int count();
 
 }
