@@ -49,19 +49,17 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public CommonResp exceptionHandler(BusinessException e) {
 //        CommonResp commonResp = new CommonResp();
-        LOG.error("业务异常：", e);
+        LOG.error("业务异常：{}", e.getBusinessExceptionEnum().getMsg());
 //        commonResp.setSuccess(false);
 //        commonResp.setMessage(e.getBusinessExceptionEnum().getMsg());
         return new CommonResp(false, e.getBusinessExceptionEnum().getMsg());
     }
 
-
-/*
-    *//**
+/**
      * 校验异常统一处理
      * @param e
      * @return
-     *//*
+     */
     @ExceptionHandler(value = BindException.class)
     @ResponseBody
     public CommonResp exceptionHandler(BindException e) {
@@ -72,11 +70,8 @@ public class ControllerExceptionHandler {
         return commonResp;
     }
 
-  */
 
-/*
 
-    */
 /**
      * 校验异常统一处理
      * @param e

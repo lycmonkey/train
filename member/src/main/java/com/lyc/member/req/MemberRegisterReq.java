@@ -1,10 +1,13 @@
 package com.lyc.member.req;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * @author lyc
  */
 public class MemberRegisterReq {
 
+    @NotBlank(message = "手机号不能为空")
     private String mobile;
 
     public MemberRegisterReq() {

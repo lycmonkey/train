@@ -4,6 +4,7 @@ import com.lyc.common.resp.CommonResp;
 import com.lyc.member.req.MemberRegisterReq;
 import com.lyc.member.service.MemberService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public CommonResp<Long> register(MemberRegisterReq memberRegisterReq) {
+    public CommonResp<Long> register(@Valid MemberRegisterReq memberRegisterReq) {
         return memberService.register(memberRegisterReq);
     }
 
