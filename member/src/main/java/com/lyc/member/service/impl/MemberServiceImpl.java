@@ -1,8 +1,12 @@
 package com.lyc.member.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.lyc.common.exception.BusinessException;
 import com.lyc.common.exception.BusinessExceptionEnum;
 import com.lyc.common.resp.CommonResp;
@@ -10,7 +14,9 @@ import com.lyc.common.util.SnowUtil;
 import com.lyc.member.domain.Member;
 import com.lyc.member.domain.MemberExample;
 import com.lyc.member.mapper.MemberMapper;
+import com.lyc.member.req.MemberLoginReq;
 import com.lyc.member.req.MemberRegisterReq;
+import com.lyc.member.resp.MemberLoginResp;
 import com.lyc.member.service.MemberService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +40,8 @@ public class MemberServiceImpl implements MemberService {
 
     public CommonResp<Long> register(MemberRegisterReq memberRegisterReq) {
         String mobile = memberRegisterReq.getMobile();
-        MemberExample memberExample = new MemberExample();
-        memberExample.createCriteria().andMobileEqualTo(mobile);
-        final List<Member> list = memberMapper.selectByExample(memberExample);
-        if (CollectionUtil.isNotEmpty(list)) {
+        final Member list = getMemberByMobile(mobile);
+        if (ObjectUtil.isNull(list)) {
             throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_EXIST);
         }
 
@@ -57,10 +61,8 @@ public class MemberServiceImpl implements MemberService {
     public void sendCode(MemberRegisterReq memberRegisterReq) {
         LOG.info("手机号格式符合，开始执行逻辑");
         String mobile = memberRegisterReq.getMobile();
-        MemberExample memberExample = new MemberExample();
-        memberExample.createCriteria().andMobileEqualTo(mobile);
-        final List<Member> list = memberMapper.selectByExample(memberExample);
-        if (CollectionUtil.isEmpty(list)) {
+        final Member list = getMemberByMobile(mobile);
+        if (ObjectUtil.isNull(list)) {
             LOG.info("手机号不存在，作为一个用户插入数据");
             final int res = memberMapper.insert(new Member(SnowUtil.getSnowflakeNextId(), mobile));
             if (res != 1) {
@@ -76,9 +78,34 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    private Member getMemberByMobile(String mobile) {
+        MemberExample memberExample = new MemberExample();
+        memberExample.createCriteria().andMobileEqualTo(mobile);
+        final List<Member> members = memberMapper.selectByExample(memberExample);
+        if (CollUtil.isEmpty(members)) {
+            return null;
+        }
+        return members.get(0);
+    }
 
+    @Override
+    public CommonResp<MemberLoginResp> login(MemberLoginReq memberLoginReq) {
 
-
+        final String mobile = memberLoginReq.getMobile();
+        final String code = memberLoginReq.getCode();
+        LOG.info("从数据库中查询用户");
+        final Member member = getMemberByMobile(mobile);
+        if (ObjectUtil.isNull(member)) {
+            LOG.info("抛出“用户不存在”异常");
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_NOT_EXIST);
+        }
+        LOG.info("用户存在，开始进行验证码校验");
+        if (!"8888".equals(code)) {
+            LOG.info("抛出“验证码错误”异常");
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_CODE_NOT_EXIST);
+        }
+        return new CommonResp<>(BeanUtil.copyProperties(member, MemberLoginResp.class));
+    }
 
     @Override
     public CommonResp<Integer> count() {
