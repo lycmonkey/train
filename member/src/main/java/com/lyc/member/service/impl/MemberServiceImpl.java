@@ -1,6 +1,8 @@
 package com.lyc.member.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.lyc.common.exception.BusinessException;
+import com.lyc.common.exception.BusinessExceptionEnum;
 import com.lyc.common.resp.CommonResp;
 import com.lyc.member.domain.Member;
 import com.lyc.member.domain.MemberExample;
@@ -27,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
         memberExample.createCriteria().andMobileEqualTo(mobile);
         final List<Member> list = memberMapper.selectByExample(memberExample);
         if (CollectionUtil.isNotEmpty(list)) {
-            throw new RuntimeException("手机号已注册");
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_EXIST);
         }
 
         Member member = new Member();
@@ -36,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
 
         int count = memberMapper.insert(member);
         if (count != 1) {
-            throw new RuntimeException("系统异常");
+            throw new RuntimeException();
         }
         return new CommonResp<>(member.getId());
     }
