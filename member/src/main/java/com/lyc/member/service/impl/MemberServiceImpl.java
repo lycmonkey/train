@@ -1,9 +1,11 @@
 package com.lyc.member.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.IdUtil;
 import com.lyc.common.exception.BusinessException;
 import com.lyc.common.exception.BusinessExceptionEnum;
 import com.lyc.common.resp.CommonResp;
+import com.lyc.common.util.SnowUtil;
 import com.lyc.member.domain.Member;
 import com.lyc.member.domain.MemberExample;
 import com.lyc.member.mapper.MemberMapper;
@@ -33,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         Member member = new Member();
-        member.setId(System.currentTimeMillis());
+        member.setId(SnowUtil.getSnowflakeNextId());
         member.setMobile(mobile);
 
         int count = memberMapper.insert(member);
