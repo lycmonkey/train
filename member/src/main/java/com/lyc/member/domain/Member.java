@@ -1,5 +1,10 @@
 package com.lyc.member.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
     private Long id;
 

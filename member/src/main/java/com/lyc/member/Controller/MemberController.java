@@ -25,6 +25,14 @@ public class MemberController {
         return memberService.register(memberRegisterReq);
     }
 
+    @PostMapping("/send-code")
+    public CommonResp<Long> sendCode(@Valid MemberRegisterReq memberRegisterReq) {
+        memberService.sendCode(memberRegisterReq);
+        return new CommonResp<>();
+    }
+
+
+
 
 
 

@@ -12,6 +12,7 @@ public interface MemberService {
 
     CommonResp<Long> register(MemberRegisterReq memberRegisterReq);
 
+    void sendCode(MemberRegisterReq memberRegisterReq);
 
 
     CommonResp<Integer> count();
