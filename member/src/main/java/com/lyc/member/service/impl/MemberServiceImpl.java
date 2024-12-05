@@ -27,7 +27,7 @@ public class MemberServiceImpl implements MemberService {
         memberExample.createCriteria().andMobileEqualTo(mobile);
         final List<Member> list = memberMapper.selectByExample(memberExample);
         if (CollectionUtil.isNotEmpty(list)) {
-            return new CommonResp<>(list.get(0).getId());
+            throw new RuntimeException("手机号已注册");
         }
 
         Member member = new Member();
@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
 
         int count = memberMapper.insert(member);
         if (count != 1) {
-            return new CommonResp<Long>(false, "注册失败");
+            throw new RuntimeException("系统异常");
         }
         return new CommonResp<>(member.getId());
     }
