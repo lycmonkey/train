@@ -55,7 +55,6 @@ export default defineComponent({
     });
 
     const sendCode = () => {
-      // axios.post("/member/member/send-code", {
       axios.post("/member/member/send-code", {
         mobile: loginForm.mobile
       }).then(response => {
@@ -75,7 +74,7 @@ export default defineComponent({
         if (data.success) {
           notification.success({ description: '登录成功！' });
           // 登录成功，跳到控台主页
-          router.push("/main");
+          router.push("/welcome");
           store.commit("setMember", data.content);
         } else {
           notification.error({ description: data.message });
