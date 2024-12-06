@@ -1,9 +1,8 @@
 POST http://localhost:8000/member/passenger/save
 Content-Type: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzM0ODYxNTYsIm1vYmlsZSI6IjEzMDAwMDAwMDAwIiwiaWQiOjE4NjQ1NzYzOTc5MTQyNzk5MzYsImV4cCI6MTczMzU3MjU1NiwiaWF0IjoxNzMzNDg2MTU2fQ.3T8SXj8lhBfKGBmxvRkzay27w6hF38KncNl2zphyJSc
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzM0ODg4OTksIm1vYmlsZSI6IjEzMDAwMDAwMDAwIiwiaWQiOjE4NjQ1NzYzOTc5MTQyNzk5MzYsImV4cCI6MTczMzU3NTI5OSwiaWF0IjoxNzMzNDg4ODk5fQ.Ox9yOJIqSPtuT9n6eRsf4vm69Q2jv2ECV06PKG4wGYo
 
 {
-  "memberId": 1,
   "name": "test",
   "idCard": "123",
   "type": "1"

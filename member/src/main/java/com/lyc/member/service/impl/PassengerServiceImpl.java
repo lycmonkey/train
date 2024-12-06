@@ -2,6 +2,7 @@ package com.lyc.member.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import com.lyc.common.context.LoginMemberContext;
 import com.lyc.common.util.SnowUtil;
 import com.lyc.member.domain.Passenger;
 import com.lyc.member.mapper.PassengerMapper;
@@ -23,6 +24,7 @@ public class PassengerServiceImpl implements PassengerService {
     public void save(PassengerSaveAndUpdateReq passengerReq) {
         final Passenger passenger = BeanUtil.copyProperties(passengerReq, Passenger.class);
         final DateTime now = DateTime.now();
+        passenger.setMemberId(LoginMemberContext.getMemberId());
         passenger.setId(SnowUtil.getSnowflakeNextId());
         passenger.setCreateTime(now);
         passenger.setUpdateTime(now);
