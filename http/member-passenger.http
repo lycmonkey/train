@@ -1,5 +1,6 @@
-POST http://localhost:8001/member/passenger/save
+POST http://localhost:8000/member/passenger/save
 Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzM0ODYxNTYsIm1vYmlsZSI6IjEzMDAwMDAwMDAwIiwiaWQiOjE4NjQ1NzYzOTc5MTQyNzk5MzYsImV4cCI6MTczMzU3MjU1NiwiaWF0IjoxNzMzNDg2MTU2fQ.3T8SXj8lhBfKGBmxvRkzay27w6hF38KncNl2zphyJSc
 
 {
   "memberId": 1,
@@ -7,3 +8,8 @@ Content-Type: application/json
   "idCard": "123",
   "type": "1"
 }
+
+
+
+
+
