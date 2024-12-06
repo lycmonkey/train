@@ -10,3 +10,16 @@ spring:
 #          uri: lb://member
           predicates:
             - Path=/member/**
+      globalcors:
+        cors-configurations:
+          '[/**]': # 适用于所有路由
+            allowedOrigins: "http://localhost:9000"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            exposedHeaders: "Authorization"
+            allowCredentials: true
+            maxAge: 3600
+
+
+
+

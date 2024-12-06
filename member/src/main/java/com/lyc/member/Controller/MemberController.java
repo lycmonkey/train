@@ -7,10 +7,7 @@ import com.lyc.member.resp.MemberLoginResp;
 import com.lyc.member.service.MemberService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author lyc
@@ -28,7 +25,7 @@ public class MemberController {
     }
 
     @PostMapping("/send-code")
-    public CommonResp<Long> sendCode(@Valid MemberRegisterReq memberRegisterReq) {
+    public CommonResp<Long> sendCode(@Valid @RequestBody MemberRegisterReq memberRegisterReq) {
         memberService.sendCode(memberRegisterReq);
         return new CommonResp<>();
     }
