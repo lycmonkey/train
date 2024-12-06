@@ -7,9 +7,11 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.jwt.JWTUtil;
 import com.lyc.common.exception.BusinessException;
 import com.lyc.common.exception.BusinessExceptionEnum;
 import com.lyc.common.resp.CommonResp;
+import com.lyc.common.util.JwtUtil;
 import com.lyc.common.util.SnowUtil;
 import com.lyc.member.domain.Member;
 import com.lyc.member.domain.MemberExample;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lyc
@@ -104,7 +107,11 @@ public class MemberServiceImpl implements MemberService {
             LOG.info("抛出“验证码错误”异常");
             throw new BusinessException(BusinessExceptionEnum.MEMBER_CODE_NOT_EXIST);
         }
-        return new CommonResp<>(BeanUtil.copyProperties(member, MemberLoginResp.class));
+        LOG.info("验证码校验通过");
+        final MemberLoginResp memberLoginResp = BeanUtil.copyProperties(member, MemberLoginResp.class);
+        final String token = JwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
+        memberLoginResp.setToken(token);
+        return new CommonResp<>(memberLoginResp);
     }
 
     @Override
