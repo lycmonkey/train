@@ -34,7 +34,7 @@ public class PassengerServiceImpl implements PassengerService {
     private PassengerMapper passengerMapper;
 
     @Override
-    public void save(PassengerSaveAndUpdateReq passengerReq) {
+    public void saveAndUpdate(PassengerSaveAndUpdateReq passengerReq) {
         final DateTime now = DateTime.now();
         final Passenger passenger = BeanUtil.copyProperties(passengerReq, Passenger.class);
         if (ObjectUtil.isNull(passengerReq.getMemberId())) {
@@ -53,6 +53,11 @@ public class PassengerServiceImpl implements PassengerService {
             passengerMapper.updateByPrimaryKey(passenger);
             LOG.info("编辑成功");
         }
+    }
+
+    @Override
+    public void delete(Long id) {
+        passengerMapper.deleteByPrimaryKey(id);
     }
 
     @Override

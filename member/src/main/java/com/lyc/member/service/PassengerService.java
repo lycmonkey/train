@@ -11,8 +11,9 @@ import java.util.List;
  * @author lyc
  */
 public interface PassengerService {
+    void delete(Long id);
 
-    void save(PassengerSaveAndUpdateReq passengerReq);
+    void saveAndUpdate(PassengerSaveAndUpdateReq passengerReq);
 
     PageResp<PassengerQueryResp> queryList(PassengerQueryReq passengerQueryReq);
 }

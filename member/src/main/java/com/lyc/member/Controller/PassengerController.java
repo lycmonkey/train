@@ -26,7 +26,7 @@ public class PassengerController {
 
     @PostMapping("/save")
     public CommonResp save(@RequestBody @Valid PassengerSaveAndUpdateReq passengerReq) {
-        passengerService.save(passengerReq);
+        passengerService.saveAndUpdate(passengerReq);
         return new CommonResp();
     }
 
@@ -35,6 +35,12 @@ public class PassengerController {
         passengerQueryReq.setMemberId(LoginMemberContext.getMemberId());
         return new CommonResp<>(passengerService.queryList(passengerQueryReq));
 
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public CommonResp delete(@PathVariable Long id) {
+        passengerService.delete(id);
+        return new CommonResp();
     }
 
 }
