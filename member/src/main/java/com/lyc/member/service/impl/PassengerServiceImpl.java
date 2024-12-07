@@ -35,16 +35,24 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public void save(PassengerSaveAndUpdateReq passengerReq) {
-        LOG.info("开始新增乘车人");
-        final Passenger passenger = BeanUtil.copyProperties(passengerReq, Passenger.class);
         final DateTime now = DateTime.now();
-        passenger.setMemberId(LoginMemberContext.getMemberId());
-        passenger.setId(SnowUtil.getSnowflakeNextId());
-        passenger.setCreateTime(now);
-        passenger.setUpdateTime(now);
-        LOG.info("乘车人信息：{}", passenger);
-        passengerMapper.insert(passenger);
-        LOG.info("新增成功");
+        final Passenger passenger = BeanUtil.copyProperties(passengerReq, Passenger.class);
+        if (ObjectUtil.isNull(passengerReq.getMemberId())) {
+            LOG.info("开始新增乘车人");
+            passenger.setMemberId(LoginMemberContext.getMemberId());
+            passenger.setId(SnowUtil.getSnowflakeNextId());
+            passenger.setCreateTime(now);
+            passenger.setUpdateTime(now);
+            LOG.info("新增乘车人信息：{}", passenger);
+            passengerMapper.insert(passenger);
+            LOG.info("新增成功");
+        }else {
+            LOG.info("开始编辑乘车人");
+            passenger.setUpdateTime(now);
+            LOG.info("编辑乘车人信息：{}", passenger);
+            passengerMapper.updateByPrimaryKey(passenger);
+            LOG.info("编辑成功");
+        }
     }
 
     @Override
