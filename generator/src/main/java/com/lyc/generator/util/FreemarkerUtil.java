@@ -13,7 +13,8 @@ import java.util.Map;
 
 public class FreemarkerUtil {
 
-    static String ftlPath = "generator/src/main/java/com/jiawa/train/generator/ftl/";
+//    static String ftlPath = "generator/src/main/java/com/lyc/generator/ftl/";
+    static String ftlPath = "D:\\course\\IntelliJ IDEA Code\\xiangmu\\train\\generator\\src\\main\\java\\com\\lyc\\generator\\ftl";
 
     static Template temp;
 

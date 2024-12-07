@@ -41,6 +41,9 @@
                              targetPackage="com.lyc.business.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="train" domainObjectName="Train"/>
+<!--        <table tableName="train" domainObjectName="Train"/>-->
+<!--        <table tableName="station" domainObjectName="Station"/>-->
+<!--        <table tableName="train_station" domainObjectName="TrainStation"/>-->
+        <table tableName="train_seat" domainObjectName="TrainSeat"/>
     </context>
 </generatorConfiguration>

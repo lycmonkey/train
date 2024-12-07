@@ -18,7 +18,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]': # 适用于所有路由
-            allowedOrigins: "http://localhost:9000"
+            allowedOrigins: "http://localhost:9000,http://localhost:9001"
             allowedMethods: "*"
             allowedHeaders: "*"
             exposedHeaders: "Authorization"

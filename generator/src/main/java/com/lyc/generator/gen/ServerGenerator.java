@@ -15,9 +15,9 @@ import java.util.*;
 
 public class ServerGenerator {
     static boolean readOnly = false;
-    static String vuePath = "admin/src/views/main/";
-    static String serverPath = "[module]/src/main/java/com/jiawa/train/[module]/";
-    static String pomPath = "generator/pom.xml";
+    static String vuePath = "train/admin/src/views/main/";
+    static String serverPath = "train/[module]/src/main/java/com/lyc/[module]/";
+    static String pomPath = "train/generator/pom.xml";
     static String module = "";
     // static {
     //     new File(serverPath).mkdirs();
@@ -34,7 +34,7 @@ public class ServerGenerator {
         System.out.println("servicePath: " + serverPath);
 
         // 读取table节点
-        Document document = new SAXReader().read("generator/" + generatorPath);
+        Document document = new SAXReader().read("train/generator/" + generatorPath);
         Node table = document.selectSingleNode("//table");
         System.out.println(table);
         Node tableName = table.selectSingleNode("@tableName");
@@ -76,7 +76,7 @@ public class ServerGenerator {
         param.put("readOnly", readOnly);
         System.out.println("组装参数：" + param);
 
-        gen(Domain, param, "service", "service");
+        gen(Domain, param, "service/impl", "service");
         gen(Domain, param, "controller/admin", "adminController");
         gen(Domain, param, "req", "saveReq");
         gen(Domain, param, "req", "queryReq");

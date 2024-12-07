@@ -1,4 +1,4 @@
-package com.jiawa.train.generator.test;
+package com.lyc.generator.test;
 
 public class ${domain} {
 

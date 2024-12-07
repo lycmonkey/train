@@ -1,4 +1,4 @@
-package com.jiawa.train.${module}.resp;
+package com.lyc.${module}.resp;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

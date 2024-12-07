@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 
 public class DbUtil {
 
-    public static String url = "";
-    public static String user = "";
-    public static String password = "";
+    public static String url = "jdbc:mysql://localhost:3306/train_business";
+    public static String user = "train_business";
+    public static String password = "train_business";
 
     public static Connection getConnection() {
         Connection conn = null;
