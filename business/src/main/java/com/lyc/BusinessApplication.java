@@ -12,11 +12,11 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 @MapperScan("com.lyc.*.mapper")
 @SpringBootApplication
-public class MemberApplication {
-    private static final Logger LOG = LoggerFactory.getLogger(MemberApplication.class);
+public class BusinessApplication {
+    private static final Logger LOG = LoggerFactory.getLogger(BusinessApplication.class);
     public static void main(String[] args) {
 //        SpringApplication.run(MemberApplication.class, args);
-        SpringApplication application = new SpringApplication(MemberApplication.class);
+        SpringApplication application = new SpringApplication(BusinessApplication.class);
         final ConfigurableEnvironment environment = application.run(args).getEnvironment();
         LOG.info("启动成功！！");
         LOG.info("地址\thttp://127.0.0.1:{}", environment.getProperty("server.port"));
