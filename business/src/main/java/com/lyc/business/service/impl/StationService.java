@@ -34,11 +34,8 @@ public class StationService {
         DateTime now = DateTime.now();
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())) {
-            StationExample stationExample = new StationExample();
-            StationExample.Criteria criteria = stationExample.createCriteria();
-            criteria.andNameEqualTo(station.getName());
-            final List<Station> stations = stationMapper.selectByExample(stationExample);
-            if (ObjectUtil.isNull(stations.get(0))) {
+            final Station stationDB = selectByStationName(station.getName());
+            if (ObjectUtil.isNull(stationDB)) {
                 station.setId(SnowUtil.getSnowflakeNextId());
                 station.setCreateTime(now);
                 station.setUpdateTime(now);
@@ -49,6 +46,13 @@ public class StationService {
             station.setUpdateTime(now);
             stationMapper.updateByPrimaryKey(station);
         }
+    }
+
+    private Station selectByStationName(String stationName) {
+        StationExample stationExample = new StationExample();
+        StationExample.Criteria criteria = stationExample.createCriteria();
+        criteria.andNameEqualTo(stationName);
+        return stationMapper.selectByExample(stationExample).get(0);
     }
 
     public PageResp<StationQueryResp> queryList(StationQueryReq req) {
