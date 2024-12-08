@@ -3,6 +3,7 @@ package com.lyc.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lyc.common.resp.PageResp;
@@ -44,9 +45,12 @@ public class TrainCarriageService {
 
     public PageResp<TrainCarriageQueryResp> queryList(TrainCarriageQueryReq req) {
         TrainCarriageExample trainCarriageExample = new TrainCarriageExample();
-        trainCarriageExample.setOrderByClause("id desc");
+        trainCarriageExample.setOrderByClause("train_code asc, 'index' asc");
         TrainCarriageExample.Criteria criteria = trainCarriageExample.createCriteria();
-
+        final String trainCode = req.getTrainCode();
+        if (StrUtil.isNotBlank(trainCode)) {
+            criteria.andTrainCodeEqualTo(trainCode);
+        }
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());
         PageHelper.startPage(req.getPage(), req.getSize());

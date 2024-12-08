@@ -12,7 +12,7 @@ mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
 logging:
   level:
-    com.lyc.member.mapper: trace
+    com.lyc.business.mapper: trace
 
 
 
