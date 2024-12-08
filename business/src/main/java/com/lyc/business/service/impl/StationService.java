@@ -5,6 +5,8 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lyc.common.exception.BusinessException;
+import com.lyc.common.exception.BusinessExceptionEnum;
 import com.lyc.common.resp.PageResp;
 import com.lyc.common.util.SnowUtil;
 import com.lyc.business.domain.Station;
@@ -32,10 +34,17 @@ public class StationService {
         DateTime now = DateTime.now();
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())) {
-            station.setId(SnowUtil.getSnowflakeNextId());
-            station.setCreateTime(now);
-            station.setUpdateTime(now);
-            stationMapper.insert(station);
+            StationExample stationExample = new StationExample();
+            StationExample.Criteria criteria = stationExample.createCriteria();
+            criteria.andNameEqualTo(station.getName());
+            final List<Station> stations = stationMapper.selectByExample(stationExample);
+            if (ObjectUtil.isNull(stations.get(0))) {
+                station.setId(SnowUtil.getSnowflakeNextId());
+                station.setCreateTime(now);
+                station.setUpdateTime(now);
+                stationMapper.insert(station);
+            }
+            throw new BusinessException(BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE);
         } else {
             station.setUpdateTime(now);
             stationMapper.updateByPrimaryKey(station);

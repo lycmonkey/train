@@ -1,15 +1,20 @@
 package com.lyc.business.service.impl;
+import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lyc.business.domain.*;
+import com.lyc.business.enums.SeatColEnum;
+import com.lyc.business.enums.SeatTypeEnum;
+import com.lyc.business.mapper.TrainCarriageMapper;
+import com.lyc.business.mapper.TrainSeatMapper;
 import com.lyc.business.service.TrainService;
 import com.lyc.common.resp.PageResp;
 import com.lyc.common.util.SnowUtil;
-import com.lyc.business.domain.Train;
-import com.lyc.business.domain.TrainExample;
 import com.lyc.business.mapper.TrainMapper;
 import com.lyc.business.req.TrainQueryReq;
 import com.lyc.business.req.TrainSaveReq;
@@ -18,6 +23,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +34,16 @@ public class TrainServiceImpl implements TrainService{
 
     @Resource
     private TrainMapper trainMapper;
+
+    @Resource
+    private TrainCarriageService trainCarriageService;
+
+    @Resource
+    private TrainSeatService trainSeatService;
+
+    @Resource
+    private TrainSeatMapper trainSeatMapper;
+
 
     public void save(TrainSaveReq req) {
         DateTime now = DateTime.now();
@@ -75,5 +91,38 @@ public class TrainServiceImpl implements TrainService{
         final List<Train> trains = trainMapper.selectByExample(trainExample);
 
         return BeanUtil.copyToList(trains, TrainQueryResp.class);
+    }
+
+
+    @Override
+    @Transactional
+    public void genSeat(String trainCode) {
+        trainSeatService.deleteByTrainCode(trainCode);
+        final List<TrainCarriage> trainCarriages = trainCarriageService.selectByTrainCode(trainCode);
+        final DateTime now = DateTime.now();
+        for (TrainCarriage trainCarriage : trainCarriages) {
+            final String seatType = trainCarriage.getSeatType();
+            final Integer rowCount = trainCarriage.getRowCount();
+            final Integer index = trainCarriage.getIndex();
+            final List<SeatColEnum> cols = SeatColEnum.getColsByType(seatType);
+            int seatIndex = 1;
+            for (int i = 1; i <= rowCount; i++) {
+                for (SeatColEnum col : cols) {
+                    TrainSeat trainSeat = new TrainSeat();
+                    trainSeat.setId(SnowUtil.getSnowflakeNextId());
+                    trainSeat.setTrainCode(trainCode);
+                    trainSeat.setCarriageIndex(index);
+//                    把i填充到2位，不够的用'0'补齐
+                    trainSeat.setRow(StrUtil.fillBefore(String.valueOf(i), '0', 2));
+                    trainSeat.setCol(col.getCode());
+                    trainSeat.setSeatType(seatType);
+                    trainSeat.setCarriageSeatIndex(seatIndex++);
+                    trainSeat.setCreateTime(now);
+                    trainSeat.setUpdateTime(now);
+                    trainSeatMapper.insert(trainSeat);
+                }
+            }
+
+        }
     }
 }

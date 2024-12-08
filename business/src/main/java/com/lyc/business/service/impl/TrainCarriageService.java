@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lyc.business.enums.SeatColEnum;
 import com.lyc.common.resp.PageResp;
 import com.lyc.common.util.SnowUtil;
 import com.lyc.business.domain.TrainCarriage;
@@ -32,10 +33,14 @@ public class TrainCarriageService {
     public void save(TrainCarriageSaveReq req) {
         DateTime now = DateTime.now();
         TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
+        final String seatType = trainCarriage.getSeatType();
+        final int col = SeatColEnum.getColsByType(seatType).size();
+        trainCarriage.setColCount(col);
+        trainCarriage.setSeatCount(col * trainCarriage.getRowCount());
+        trainCarriage.setUpdateTime(now);
         if (ObjectUtil.isNull(trainCarriage.getId())) {
             trainCarriage.setId(SnowUtil.getSnowflakeNextId());
             trainCarriage.setCreateTime(now);
-            trainCarriage.setUpdateTime(now);
             trainCarriageMapper.insert(trainCarriage);
         } else {
             trainCarriage.setUpdateTime(now);
@@ -71,4 +76,12 @@ public class TrainCarriageService {
     public void delete(Long id) {
         trainCarriageMapper.deleteByPrimaryKey(id);
     }
+
+    public List<TrainCarriage> selectByTrainCode(String trainCode) {
+        TrainCarriageExample trainCarriageExample = new TrainCarriageExample();
+        final TrainCarriageExample.Criteria trainCarriageExampleCriteria = trainCarriageExample.createCriteria();
+        trainCarriageExampleCriteria.andTrainCodeEqualTo(trainCode);
+        return trainCarriageMapper.selectByExample(trainCarriageExample);
+    }
+
 }

@@ -72,4 +72,11 @@ public class TrainSeatService {
     public void delete(Long id) {
         trainSeatMapper.deleteByPrimaryKey(id);
     }
+
+    public void deleteByTrainCode(String trainCode) {
+        TrainSeatExample trainSeatExample = new TrainSeatExample();
+        final TrainSeatExample.Criteria trainSeatExampleCriteria = trainSeatExample.createCriteria();
+        trainSeatExampleCriteria.andTrainCodeEqualTo(trainCode);
+        trainSeatMapper.deleteByExample(trainSeatExample);
+    }
 }
