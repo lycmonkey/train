@@ -8,12 +8,13 @@ spring:
     username: train_business
     password: train_business
     driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: business
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
 logging:
   level:
     com.lyc.business.mapper: trace
-
 
 
 
