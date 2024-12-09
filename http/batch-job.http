@@ -2,7 +2,7 @@ POST http://localhost:8000/batch/admin/job/add
 Content-Type: application/json
 
 {
-  "name": "com.lyc.batch.job.TestJob",
+  "name": "com.lyc.batch.job.DailyTrainJob",
   "jobGroupName": "default",
   "cronExpression": "*/2 * * * * ?",
   "desc": "test job"
@@ -60,6 +60,6 @@ POST http://localhost:8000/batch/admin/job/run
 Content-Type: application/json
 
 {
-"name": "com.lyc.batch.job.TestJob",
+"name": "com.lyc.batch.job.DailyTrainJob",
 "jobGroupName": "default"
 }

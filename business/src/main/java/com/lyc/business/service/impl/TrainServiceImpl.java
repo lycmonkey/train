@@ -87,10 +87,12 @@ public class TrainServiceImpl implements TrainService{
 
     @Override
     public List<TrainQueryResp> queryAll() {
-        TrainExample trainExample = new TrainExample();
-        final List<Train> trains = trainMapper.selectByExample(trainExample);
-
+        final List<Train> trains = selectAll();
         return BeanUtil.copyToList(trains, TrainQueryResp.class);
+    }
+
+    public List<Train> selectAll() {
+        return trainMapper.selectByExample(new TrainExample());
     }
 
 

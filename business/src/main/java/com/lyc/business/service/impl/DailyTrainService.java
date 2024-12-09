@@ -5,6 +5,8 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lyc.business.domain.Train;
+import com.lyc.business.service.TrainService;
 import com.lyc.common.resp.PageResp;
 import com.lyc.common.util.SnowUtil;
 import com.lyc.business.domain.DailyTrain;
@@ -17,7 +19,9 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +31,8 @@ public class DailyTrainService {
 
     @Resource
     private DailyTrainMapper dailyTrainMapper;
+    @Resource
+    private TrainService trainService;
 
     public void save(DailyTrainSaveReq req) {
         DateTime now = DateTime.now();
@@ -44,7 +50,7 @@ public class DailyTrainService {
 
     public PageResp<DailyTrainQueryResp> queryList(DailyTrainQueryReq req) {
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
-        dailyTrainExample.setOrderByClause("id desc");
+        dailyTrainExample.setOrderByClause("date desc, code asc");
         DailyTrainExample.Criteria criteria = dailyTrainExample.createCriteria();
 
         LOG.info("查询页码：{}", req.getPage());
@@ -66,5 +72,30 @@ public class DailyTrainService {
 
     public void delete(Long id) {
         dailyTrainMapper.deleteByPrimaryKey(id);
+    }
+
+    @Transactional
+    public void genDaily(Date date) {
+        LOG.info("查出车次基础数据");
+        final List<Train> trains = trainService.selectAll();
+        for (Train train : trains) {
+            LOG.info("删除某列车次某天的数据：{}，{}", train.getCode(), date);
+            deleteDailyTrain(date, train);
+            final DailyTrain dailyTrain = BeanUtil.copyProperties(train, DailyTrain.class);
+            dailyTrain.setId(SnowUtil.getSnowflakeNextId());
+            dailyTrain.setDate(date);
+            dailyTrain.setCreateTime(new Date());
+            dailyTrain.setUpdateTime(new Date());
+            LOG.info("插入某列车次某天的数据：{}，{}", dailyTrain.getCode(), dailyTrain.getDate());
+            dailyTrainMapper.insert(dailyTrain);
+        }
+
+
+    }
+
+    private void deleteDailyTrain(Date date, Train train) {
+        DailyTrainExample dailyTrainExample = new DailyTrainExample();
+        dailyTrainExample.createCriteria().andDateEqualTo(date).andCodeEqualTo(train.getCode());
+        dailyTrainMapper.deleteByExample(dailyTrainExample);
     }
 }

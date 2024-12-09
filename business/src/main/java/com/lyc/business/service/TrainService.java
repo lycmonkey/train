@@ -1,5 +1,6 @@
 package com.lyc.business.service;
 
+import com.lyc.business.domain.Train;
 import com.lyc.business.req.TrainQueryReq;
 import com.lyc.business.req.TrainSaveReq;
 import com.lyc.business.resp.TrainQueryResp;
@@ -18,6 +19,8 @@ public interface TrainService {
     void delete(Long id);
 
     List<TrainQueryResp> queryAll();
+
+    List<Train> selectAll();
 
     void genSeat(String trainCode);
 }
