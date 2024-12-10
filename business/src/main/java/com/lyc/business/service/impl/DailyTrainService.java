@@ -40,6 +40,9 @@ public class DailyTrainService {
     private DailyTrainCarriageService dailyTrainCarriageService;
     @Resource
     private DailyTrainSeatService dailyTrainSeatService;
+    @Resource
+    private DailyTrainTicketService dailyTrainTicketService;
+
 
     public void save(DailyTrainSaveReq req) {
         DateTime now = DateTime.now();
@@ -104,8 +107,10 @@ public class DailyTrainService {
             dailyTrainStationService.genDaily(date, train.getCode());
             LOG.info("插入车次某天车厢数据");
             dailyTrainCarriageService.genDaily(date, train.getCode());
-            LOG.info("插入车次某天车厢作为数据");
+            LOG.info("插入车次某天车厢座位数据");
             dailyTrainSeatService.genDaily(date, train.getCode());
+            LOG.info("插入车次某天余票数据");
+            dailyTrainTicketService.genDailyTicket(date, train.getCode(), dailyTrain);
         }
 
 

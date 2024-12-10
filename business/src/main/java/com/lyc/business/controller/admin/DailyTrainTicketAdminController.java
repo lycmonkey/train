@@ -8,7 +8,10 @@ import com.lyc.business.req.DailyTrainTicketSaveReq;
 import com.lyc.business.resp.DailyTrainTicketQueryResp;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/admin/daily-train-ticket")
@@ -34,5 +37,15 @@ public class DailyTrainTicketAdminController {
         dailyTrainTicketService.delete(id);
         return new CommonResp<>();
     }
+/*
+
+    @GetMapping("/gen-daily-ticket")
+    public CommonResp genDailyTicket(
+            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            String trainCode) {
+        dailyTrainTicketService.genDailyTicket(date, trainCode);
+        return new CommonResp();
+    }
+*/
 
 }
