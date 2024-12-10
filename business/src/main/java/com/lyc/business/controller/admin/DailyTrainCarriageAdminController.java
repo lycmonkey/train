@@ -8,7 +8,10 @@ import com.lyc.business.req.DailyTrainCarriageSaveReq;
 import com.lyc.business.resp.DailyTrainCarriageQueryResp;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/admin/daily-train-carriage")
@@ -33,6 +36,15 @@ public class DailyTrainCarriageAdminController {
     public CommonResp<Object> delete(@PathVariable Long id) {
         dailyTrainCarriageService.delete(id);
         return new CommonResp<>();
+    }
+
+    @GetMapping("/gen-daily/")
+    CommonResp genDaily(
+            @PathVariable @DateTimeFormat(pattern = "yy-MM-dd") Date date,
+            String trainCode) {
+        dailyTrainCarriageService.genDaily(date, trainCode);
+
+        return new CommonResp();
     }
 
 }

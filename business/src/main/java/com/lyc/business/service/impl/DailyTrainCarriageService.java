@@ -1,10 +1,14 @@
 package com.lyc.business.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lyc.business.domain.DailyTrainStation;
+import com.lyc.business.domain.TrainCarriage;
+import com.lyc.business.mapper.DailyTrainSeatMapper;
 import com.lyc.common.resp.PageResp;
 import com.lyc.common.util.SnowUtil;
 import com.lyc.business.domain.DailyTrainCarriage;
@@ -17,7 +21,9 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +33,9 @@ public class DailyTrainCarriageService {
 
     @Resource
     private DailyTrainCarriageMapper dailyTrainCarriageMapper;
+
+    @Resource
+    private TrainCarriageService trainCarriageService;
 
     public void save(DailyTrainCarriageSaveReq req) {
         DateTime now = DateTime.now();
@@ -66,5 +75,27 @@ public class DailyTrainCarriageService {
 
     public void delete(Long id) {
         dailyTrainCarriageMapper.deleteByPrimaryKey(id);
+    }
+
+    @Transactional
+    public void genDaily(Date date, String trainCode) {
+        DailyTrainCarriageExample dailyTrainCarriageExample = new DailyTrainCarriageExample();
+        dailyTrainCarriageExample.createCriteria().andDateEqualTo(date).andTrainCodeEqualTo(trainCode);
+        dailyTrainCarriageMapper.deleteByExample(dailyTrainCarriageExample);
+        final List<TrainCarriage> trainCarriages = trainCarriageService.selectByTrainCode(trainCode);
+        if (CollUtil.isEmpty(trainCarriages)) {
+            return;
+        }
+        final Date now = new Date();
+        final List<DailyTrainCarriage> dailyTrainCarriages = BeanUtil.copyToList(trainCarriages, DailyTrainCarriage.class);
+        for (DailyTrainCarriage dailyTrainCarriage : dailyTrainCarriages) {
+            dailyTrainCarriage.setId(SnowUtil.getSnowflakeNextId());
+            dailyTrainCarriage.setDate(date);
+            dailyTrainCarriage.setCreateTime(now);
+            dailyTrainCarriage.setUpdateTime(now);
+            dailyTrainCarriageMapper.insert(dailyTrainCarriage);
+        }
+
+
     }
 }

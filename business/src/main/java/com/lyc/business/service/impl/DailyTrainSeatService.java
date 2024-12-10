@@ -1,14 +1,15 @@
 package com.lyc.business.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lyc.business.domain.*;
 import com.lyc.common.resp.PageResp;
 import com.lyc.common.util.SnowUtil;
-import com.lyc.business.domain.DailyTrainSeat;
-import com.lyc.business.domain.DailyTrainSeatExample;
 import com.lyc.business.mapper.DailyTrainSeatMapper;
 import com.lyc.business.req.DailyTrainSeatQueryReq;
 import com.lyc.business.req.DailyTrainSeatSaveReq;
@@ -17,7 +18,9 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +30,12 @@ public class DailyTrainSeatService {
 
     @Resource
     private DailyTrainSeatMapper dailyTrainSeatMapper;
+
+    @Resource
+    private TrainSeatService trainSeatService;
+
+    @Resource
+    private TrainStationService trainStationService;
 
     public void save(DailyTrainSeatSaveReq req) {
         DateTime now = DateTime.now();
@@ -66,5 +75,29 @@ public class DailyTrainSeatService {
 
     public void delete(Long id) {
         dailyTrainSeatMapper.deleteByPrimaryKey(id);
+    }
+
+    @Transactional
+    public void genDaily(Date date, String trainCode) {
+        DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
+        dailyTrainSeatExample.createCriteria().andDateEqualTo(date).andTrainCodeEqualTo(trainCode);
+        dailyTrainSeatMapper.deleteByExample(dailyTrainSeatExample);
+        final List<TrainSeat> trainSeats = trainSeatService.selectByTrainCode(trainCode);
+        if (CollUtil.isEmpty(trainSeats)) {
+            return;
+        }
+        final List<TrainStation> trainStations = trainStationService.selectByTrainCode(trainCode);
+        final String sell = StrUtil.fillBefore("", '0', trainStations.size() - 1);
+        final Date now = new Date();
+        final List<DailyTrainSeat> dailyTrainSeats = BeanUtil.copyToList(trainSeats, DailyTrainSeat.class);
+        for (DailyTrainSeat dailyTrainSeat : dailyTrainSeats) {
+            dailyTrainSeat.setId(SnowUtil.getSnowflakeNextId());
+            dailyTrainSeat.setDate(date);
+            dailyTrainSeat.setSell(sell);
+            dailyTrainSeat.setCreateTime(now);
+            dailyTrainSeat.setUpdateTime(now);
+            dailyTrainSeatMapper.insert(dailyTrainSeat);
+        }
+
     }
 }

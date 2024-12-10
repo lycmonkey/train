@@ -79,4 +79,10 @@ public class TrainSeatService {
         trainSeatExampleCriteria.andTrainCodeEqualTo(trainCode);
         trainSeatMapper.deleteByExample(trainSeatExample);
     }
+
+    public List<TrainSeat> selectByTrainCode(String trainCode) {
+        TrainSeatExample trainSeatExample = new TrainSeatExample();
+        trainSeatExample.createCriteria().andTrainCodeEqualTo(trainCode);
+        return trainSeatMapper.selectByExample(trainSeatExample);
+    }
 }

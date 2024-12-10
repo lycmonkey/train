@@ -3,6 +3,7 @@
     <a-space>
       <a-date-picker v-model:value="params.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期" />
       <train-select-view v-model="params.code" width="200px"></train-select-view>
+      <a-button type="primary" @click="handleSearch">查询</a-button>
       <a-button type="primary" @click="handleQuery()">刷新</a-button>
       <a-button type="primary" @click="onAdd">新增</a-button>
       <a-button type="danger" @click="onClickGenDaily">手动生成车次信息</a-button>
@@ -107,6 +108,11 @@ export default defineComponent({
       createTime: undefined,
       updateTime: undefined,
     });
+
+    const handleSearch = () => {
+      // 使用当前选择的日期和车次进行查询 handleQuery({ page: 1, size: pagination.value.pageSize, date: params.value.date, code: params.value.code }); };
+      handleQuery({ page: 1, size: pagination.value.pageSize, date: params.value.date, code: params.value.code });
+    };
     const dailyTrains = ref([]);
     // 分页的三个属性名是固定的
     const pagination = ref({
@@ -239,6 +245,7 @@ export default defineComponent({
           // 设置分页控件的值
           pagination.value.current = param.page;
           pagination.value.total = data.content.total;
+          pagination.value.pageSize = param.size; // 确保更新分页控件的 pageSize
         } else {
           notification.error({description: data.message});
         }
@@ -311,8 +318,11 @@ export default defineComponent({
       genDailyVisible,
       handleGenDailyOk,
       onClickGenDaily,
-      genDailyLoading
+      genDailyLoading,
+      handleSearch
     };
   },
 });
 </script>
+
+

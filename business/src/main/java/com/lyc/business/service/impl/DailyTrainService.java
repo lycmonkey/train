@@ -3,6 +3,7 @@ package com.lyc.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lyc.business.domain.Train;
@@ -33,6 +34,12 @@ public class DailyTrainService {
     private DailyTrainMapper dailyTrainMapper;
     @Resource
     private TrainService trainService;
+    @Resource
+    private DailyTrainStationService dailyTrainStationService;
+    @Resource
+    private DailyTrainCarriageService dailyTrainCarriageService;
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
 
     public void save(DailyTrainSaveReq req) {
         DateTime now = DateTime.now();
@@ -52,7 +59,12 @@ public class DailyTrainService {
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
         dailyTrainExample.setOrderByClause("date desc, code asc");
         DailyTrainExample.Criteria criteria = dailyTrainExample.createCriteria();
-
+        if (StrUtil.isNotBlank(req.getCode())) {
+            criteria.andCodeEqualTo(req.getCode());
+        }
+        if (ObjectUtil.isNotNull(req.getDate())) {
+            criteria.andDateEqualTo(req.getDate());
+        }
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());
         PageHelper.startPage(req.getPage(), req.getSize());
@@ -88,7 +100,15 @@ public class DailyTrainService {
             dailyTrain.setUpdateTime(new Date());
             LOG.info("插入某列车次某天的数据：{}，{}", dailyTrain.getCode(), dailyTrain.getDate());
             dailyTrainMapper.insert(dailyTrain);
+            LOG.info("插入车次某天经过车站数据");
+            dailyTrainStationService.genDaily(date, train.getCode());
+            LOG.info("插入车次某天车厢数据");
+            dailyTrainCarriageService.genDaily(date, train.getCode());
+            LOG.info("插入车次某天车厢作为数据");
+            dailyTrainSeatService.genDaily(date, train.getCode());
         }
+
+
 
 
     }

@@ -22,4 +22,18 @@ public interface BusinessFeign {
     @GetMapping("/admin/daily-train/gen-daily/{date}")
     CommonResp genDaily(@PathVariable @DateTimeFormat(pattern = "yy-MM-dd") Date date);
 
+    /*@GetMapping("/admin/daily-train-station/gen-daily/")
+    CommonResp genDailyStation(
+            @PathVariable @DateTimeFormat(pattern = "yy-MM-dd") Date date,
+            String trainCode);
+
+    @GetMapping("/admin/daily-train-carriage/gen-daily/")
+    CommonResp genDailyTrainCarriage(
+            @PathVariable @DateTimeFormat(pattern = "yy-MM-dd") Date date,
+            String trainCode);
+
+    @GetMapping("/admin/daily-train-seat/gen-daily/")
+    CommonResp genDailyTrainSeat(
+            @PathVariable @DateTimeFormat(pattern = "yy-MM-dd") Date date,
+            String trainCode);*/
 }
