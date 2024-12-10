@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lyc.business.domain.DailyTrain;
@@ -59,8 +60,19 @@ public class DailyTrainTicketService {
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
         dailyTrainTicketExample.setOrderByClause("id desc");
-        DailyTrainTicketExample.Criteria criteria = dailyTrainTicketExample.createCriteria();
-
+        final DailyTrainTicketExample.Criteria criteria = dailyTrainTicketExample.createCriteria();
+        if (ObjectUtil.isNotNull(req.getDate())) {
+            criteria.andDateEqualTo(req.getDate());
+        }
+        if (StrUtil.isNotBlank(req.getTrainCode())) {
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        }
+        if (StrUtil.isNotBlank(req.getStart())) {
+            criteria.andStartEqualTo(req.getStart());
+        }
+        if (StrUtil.isNotBlank(req.getEnd())) {
+            criteria.andEndEqualTo(req.getEnd());
+        }
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());
         PageHelper.startPage(req.getPage(), req.getSize());
