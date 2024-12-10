@@ -26,6 +26,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,7 @@ public class ConfirmOrderService {
     }
 
 
+    @Transactional
     public void doConfirm(ConfirmOrderDoReq req) {
         LOG.info("省略业务数据校验，如：车次是否存在，余票是否存在，车次是否在有效期内，tickets条数>0，同乘客同车次是否已买过");
 
@@ -106,7 +108,7 @@ public class ConfirmOrderService {
 //        扣减余票数量，并判断余票是否足够
         final List<ConfirmOrderTicketReq> tickets = req.getTickets();
         for (ConfirmOrderTicketReq ticket : tickets) {
-            final String seatType = ticket.getSeatType();
+            final String seatType = ticket.getSeatTypeCode();
             final SeatTypeEnum seatTypeEnum = EnumUtil.getBy(SeatTypeEnum::getCode, seatType);
             switch (seatTypeEnum) {
                 case YDZ -> {

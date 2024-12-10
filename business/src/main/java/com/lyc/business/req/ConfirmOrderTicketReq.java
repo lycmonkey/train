@@ -20,7 +20,7 @@ public class ConfirmOrderTicketReq {
     private String passengerIdCard;
 
     @NotNull
-    private String seatType;
+    private String seatTypeCode;
 
     private String seat;
 
