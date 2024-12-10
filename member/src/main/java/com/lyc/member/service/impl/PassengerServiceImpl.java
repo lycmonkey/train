@@ -1,6 +1,7 @@
 package com.lyc.member.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -78,4 +79,15 @@ public class PassengerServiceImpl implements PassengerService {
         LOG.info("总页数：{}", pageInfo.getPages());
         return new PageResp<>(pageInfo.getTotal(), BeanUtil.copyToList(passengers, PassengerQueryResp.class));
     }
+
+    public List<PassengerQueryResp> queryMine() {
+        final Long memberId = LoginMemberContext.getMemberId();
+        PassengerExample passengerExample = new PassengerExample();
+        passengerExample.createCriteria().andMemberIdEqualTo(memberId);
+        final List<Passenger> passengers = passengerMapper.selectByExample(passengerExample);
+        return BeanUtil.copyToList(passengers, PassengerQueryResp.class);
+
+    }
+
+
 }

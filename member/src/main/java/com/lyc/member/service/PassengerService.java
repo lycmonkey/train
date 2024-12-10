@@ -16,4 +16,6 @@ public interface PassengerService {
     void saveAndUpdate(PassengerSaveAndUpdateReq passengerReq);
 
     PageResp<PassengerQueryResp> queryList(PassengerQueryReq passengerQueryReq);
+
+    Object queryMine();
 }
