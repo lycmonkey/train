@@ -7,7 +7,9 @@ public enum BusinessExceptionEnum {
     MEMBER_MOBILE_EXIST("手机号已注册"),
     MEMBER_CODE_NOT_EXIST("验证码错误"),
     BUSINESS_STATION_NAME_UNIQUE("车站名字不能重复"),
-    MEMBER_MOBILE_NOT_EXIST("手机号不存在")
+    MEMBER_MOBILE_NOT_EXIST("手机号不存在"),
+
+    CONFIRM_ORDER_NOT_ENOUGH_ERROR("余票数量不足")
     ;
 
 
